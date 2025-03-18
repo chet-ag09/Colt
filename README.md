@@ -1,6 +1,7 @@
 # COLT
 
+Colt is a "reverse screen sharer", what that means is that the attacker can generate an .exe file that when the victim opens, shares their entire screen to the attacker while running background.
 
-
-This project enables remote screen sharing by allowing a victim machine to send live screen captures to an attacker machine over a network. The attacker waits for an incoming connection from the victim, who sends compressed screen data in real-time.
+## How it works
+The attacker can setup a listener and when the user opens the .exe file, connects to the attacker.
 
