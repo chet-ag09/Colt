@@ -46,6 +46,7 @@ while True:
     parser.add_argument("-IP", "--ip", help="generate .exe for the victim")
     parser.add_argument("-PORT", "--port", help="generate .exe for the victim")
     parser.add_argument("-CONNECT", "--connect", action="store_true", help="Connects with the target.")
+    parser.add_argument("-CLEAR", "--clear", action="store_true", help="Clear ui.")
 
     args = parser.parse_args(colt_cm)
 
@@ -56,5 +57,5 @@ while True:
     elif args.connect:
         client.listener(args.ip, args.port)
 
-    elif colt_cm.lower in ["clear", "cls"]:
-        clear_screen()
+    elif args.clear:
+        clear_screen()#added this from my phone because I couldn't sleep pls recheck to see if it works
