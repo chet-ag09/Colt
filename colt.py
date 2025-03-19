@@ -58,4 +58,4 @@ while True:
         client.listener(args.ip, args.port)
 
     elif args.clear:
-        clear_screen()#added this from my phone because I couldn't sleep pls recheck to see if it works
+        clear_screen()
