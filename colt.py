@@ -51,7 +51,6 @@ while True:
     args = parser.parse_args(colt_cm)
 
     if args.exe:
-        print("Generating .exe file for the user...")
         ge.create_exe(args.ip, args.port)
 
     elif args.connect:
