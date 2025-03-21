@@ -40,6 +40,6 @@ def create_exe(ip, port, name):
             if os.path.exists(spec_file):
                 os.remove(spec_file)  # Remove the .spec file
 
-            print(f"{GREEN}[+] Cleaned up build files and spec file.{RESET}")
+            print(f"{GREEN}[+] You may run '-CONNECT' command to start listener{RESET}")
         except Exception as e:
             print(f"[-] Error during cleanup: {e}")

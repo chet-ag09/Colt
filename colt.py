@@ -1,5 +1,3 @@
-# BY WINTERREX
-
 import os
 import argparse
 import Main.window_runner as client

@@ -17,6 +17,7 @@ def listener(ip, port):
 
     conn, addr = server.accept()
     print(f"[+] Connection received from {addr}")
+    print(f"[+] Press 'q' to quit the window")
 
     # Receive the encryption key from the client
     key = conn.recv(1024)
