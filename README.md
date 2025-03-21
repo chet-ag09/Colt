@@ -1,5 +1,3 @@
-
-
 # COLT
 
 Colt is a "reverse screen sharer", what that means is that the attacker can generate an .exe file that when the victim opens, shares their entire screen to the attacker while running background.

@@ -22,7 +22,7 @@ def create_exe(ip, port, name):
     print(f"[+] Created {script_name} with IP {ip} and Port {port}")
 
     # Generate EXE 
-    result = os.system(f'pyinstaller --onefile --noconsole {script_name}')
+    result = os.system(f'pyinstaller --onefile --icon=Main/assets/icon_exe.png --noconsole {script_name}')
 
     if result != 0:
         print("[-] PyInstaller encountered an error. Try running manually:")
