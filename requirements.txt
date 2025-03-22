@@ -1,0 +1,7 @@
+mss
+sounddevice
+struct
+pickle
+cv2
+pyinstaller
+sounddevice
