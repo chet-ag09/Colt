@@ -1,7 +1,7 @@
 mss
 sounddevice
-struct
-pickle
-cv2
+opencv-python
 pyinstaller
 sounddevice
+scipy
+cryptography
