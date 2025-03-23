@@ -32,6 +32,7 @@ def print_banner():
 clear_screen()
 print_banner()
 print("\n[+] enter -h for all available tags\n")
+print("\n[+] THIS IS FOR EDUCATIONAL PURPOSES ONLY, DO NOT USE IT FOR MALICIOUS PURPOSES!!!\n")
 
 
 payload_type = None
