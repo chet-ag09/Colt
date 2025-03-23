@@ -55,6 +55,7 @@ while True:
     if args.exe:
         ge.create_exe(args.ip, args.port, args.name, args.icon)
 
+
     elif args.connect:
         client.listener(args.ip, args.port)
 
